@@ -11,4 +11,7 @@
         android:id="@+id/clear_search"
         android:title="Clear"
         app:showAsAction="never"/>
+    <item android:id="@+id/menu_toggle_polling"
+        android:title="Start polling"
+        app:showAsAction="ifRoom"/>
 </menu>

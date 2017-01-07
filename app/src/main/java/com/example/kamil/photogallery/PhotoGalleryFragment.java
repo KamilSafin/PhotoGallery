@@ -2,7 +2,6 @@ package com.example.kamil.photogallery;
 
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -13,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -69,6 +67,8 @@ public class PhotoGalleryFragment extends Fragment {
 
         new FetchItemsTask().execute("");
 
+        PollService.setServiceAlarm(getContext(), true);
+
         setupAdapter();
 
         return view;
@@ -103,6 +103,26 @@ public class PhotoGalleryFragment extends Fragment {
                 searchView.setQuery(query, false);
             }
         });
+
+        MenuItem toggleItem = menu.findItem(R.id.menu_toggle_polling);
+        if (PollService.isServiceAlarmOn(getContext())) {
+            toggleItem.setTitle("Stop polling");
+        } else {
+            toggleItem.setTitle("Start polling");
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_toggle_polling:
+                boolean shouldStartAlarm = !PollService.isServiceAlarmOn(getContext());
+                PollService.setServiceAlarm(getContext(), shouldStartAlarm);
+                getActivity().invalidateOptionsMenu();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
